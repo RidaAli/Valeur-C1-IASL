@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" ng-app>
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Persistence</title>
+
+		<meta name="description" content="Persistence">
+		<meta name="author" content="Ali Rida">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<script src="lib/js/jquery-2.0.3.js"></script>
+		<script src="lib/js/angular.js"></script>
+		<script>
+		function AppCtrl($scope){
+			$scope.greeting = '{{ greeting }}'
+			$scope.yourNameStr = '{{ yourName }}'
+		}
+	    </script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body ng-controller="AppCtrl">
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h2>La Persistence en</h2>
+					<h1><img src="img/java.png" title="AngularJS" style="border:0; background-color: transparent; box-shadow: none;" /></h1>
+					<p>
+						<small>Created by <a href="">Ali Rida</a></small>
+					</p>
+				</section>
+<section>
+					<h2>Definition</h2>
+					<p class="fragment">La persistance est la capacité d'un objet à survivre l'execution courante du programme et se sauvegarder sur le disque.</p>
+				</section>
+				<section>
+				<h2>Exemple class</h2>
+						<pre><code data-trim contenteditable style="margin: 20px 0px">
+public class Person {
+   protected String   sName;
+   protected Date birthdate;
+
+   public void setName( String sName ) {
+      this.sName = sName;
+   }
+   public String getName() {
+      return sName;
+   }   
+   public void setBirthDate(Date aBirthDate) {
+      this.birthdate = aBirthDate;
+   }
+   public Date getBirthDate() {
+      return birthdate;
+   }
+}		</code></pre>
+				
+				</section>
+				
+								<section>
+				<h2>Exemple objet</h2>
+						<pre><code data-trim contenteditable style="margin: 20px 0px">
+
+   public static void main ( String [] args ) {
+
+      Person moi = new Person();
+      moi.setName("Ali Rida");
+      moi.setBirthDate ("21-06-1993");
+      System.out.println ( moi );
+
+   }		</code></pre>
+				
+				</section>
+				<section>
+					<h2>Pourquoi?</h2>
+					<p class="fragment">La programmation orientée objets est aujourd’hui un standard. La persistance des objets est un point critique, dont dépend la
+performance et la disponibilité des informations de tout projet Java. C’est pourquoi il est important de séparer les
+responsabilités d’accès aux données sérialisées des interfaces hommemachine.</p>
+				</section>
+
+				<section>
+				
+				<h2>Les couches</h2>
+					<ul>
+						<li class="fragment">La couche métier ne doit contenir que la logique métier, c’est à dire propre à l’objet qu’elle représente.</li>
+						<li class="fragment">La couche DAO (Data Access Objects) a pour but de transformer les objets métiers en données sérialisées et inversement.</li>
+						<li class="fragment">La couche UI (User Interface) regroupe tout ce qui a trait à la présentation des données et aux interactions avec l’utilisateur,
+en appelant des traitements mis à disposition sous forme de méthode par les objets métier.
+Architecture 3Tiers</li>					
+					</ul>						
+				</section>
+
+				<section>
+			<h2>La sérialisation</h2>					
+					<p class="fragment">
+					La sérialisation peut être assurée sur différents types de support (mémoire, fichiers, bases de données…).					
+					Il est possible de développer ses propres outils avec les classes de sérialisation du JDK, mais c’est couteux à mettre en
+oeuvre et à faire évoluer avec les versions du JDK. De plus ces classes ne sont exécutables qu’en local.</p>
+				</section>
+
+				<section>
+				<p>Une solution causant un autre probleme</p>
+					<p class="fragment">
+					
+					L’utilisation de bases de données permet de répondre à ces problématiques. Bien que les bases de données orientées objet
+telles ObjectStore et DB4O et les bases de données NoSQL soient l’outil de sérialisation idéal, ce sont les moteurs de bases
+de données relationnelles qui dominent le marché. Elles n’ont pas réussi à s’imposer face aux géants des bases de données
+relationnelles notamment à cause de la reprise de bases de données relationnelles déjà présentes dans les systèmes
+d’information des entreprises.
+					</p> 			
+				</section>
+
+				<section>
+<p class="fragment">Les développements basés sur l’utilisation directe des interfaces JDBC assurent un pont de bas niveau pour communiquer
+avec une base de données relationnelle en SQL.</p>
+				</section>
+
+		
+
+				<section>
+					<h2>Role de la couche DAO</h2>
+					<ul>
+						<li class="fragment">Une table (appelée aussi relation) à une liste d’objets</li>
+						<li class="fragment">Une ligne d’une table (appelée aussi tuple) à un objet</li>
+						<li class="fragment">Un champs de base de données à un attribut d’objet</li>
+						<li class="fragment">Une valeur d’un champs à une valeur d’attribut d’un objet Des modifications du modèle de données ont des
+répercussions sur les requêtes aux bases, ce qui implique de faire évoluer individuellement les appels jdbc. La
+maintenance est de ce fait couteuse.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>La solution!</h2>
+			<p class="fragment">
+			Pour pallier à cette problématique et faciliter l’écriture de la couche DAO, il faut s’affranchir de la forme brute des données. La
+communauté Java a donc fait naître des frameworks de DAO, tels que Hibernate, Toplink, EclipseLink, Oracle BC4J... Ces
+ORM (Object Relational Mapping) permettent de se libérer d’une partie de la gestion des accès aux données. Le développeur
+de la couche DAO ne voit plus la couche JDBC ni les tables de la base de données. Il ne voit que l’image objet de la base de
+données fournie par la couche ORM.
+			</p>
+				</section>
+
+				<section>
+				<h2>Un nouveau probleme!</h2>
+					<p class="fragment">Comme ils ne reposent pas sur des standards Java, le choix de l’ORM n’est pas sans conséquences sur le code utilisé pour
+transférer une donnée métier dans la base de données. Il n’est en effet pas si aisé de passer de Hibernate à TopLink par
+exemple.</p>
+				</section>
+
+				<section>
+				<h2>La standardisation  est la solution</h2>
+					<p class="fragment">Fort du succès des ORM, Sun décide de créer un standard pour l’utilisation de la couche ORM dans Java 5 : JPA (Java
+Persistence API). La couche DAO dialogue avec la spécification JPA qui est un ensemble d’interface du package
+javax.persistence. Quelque soit le produit qui implémente celleci,
+l’interface JPA utilisée dans la couche DAO reste la même.
+La couche DAO a ainsi été simplifiée et ne dépend plus du choix du fournisseur d’ORM ni du fournisseur de base de données
+puisqu’il est également possible d’utiliser certaines bases NoSQL telles que ObjectDB.</p>
+				</section>
+
+				<section>
+					<p class="fragment">
+					<h2>
+					Conclusion
+					</h2>
+					<p class="fragment"></p>
+					</p>
+				</section>
+
+			
+
+				<section>					
+					<h2>Questions?</h2>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
